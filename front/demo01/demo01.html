@@ -2,10 +2,16 @@
  * @Author: Charryc 1121716938@qq.com
  * @Date: 2024-07-11 12:07:44
  * @LastEditors: Charryc 1121716938@qq.com
- * @LastEditTime: 2024-07-11 12:11:19
+ * @LastEditTime: 2024-07-14 11:02:09
  * @FilePath: \手撕代码\front\demo01\demo01.html
  * @Description: 防抖节流demo
- * @防抖：防止重复点击  @节流：滚动事件防止频繁触发
+ * @ 防抖效果：
+ * 在事件触发的delay时间范围内 再次触发则 重新计时（不希望在触发后的delay时间内重复触发）
+ * 应用：键盘输入请求数据
+ * 
+ * @ 节流效果：
+ * 在delay时间范围内，触发一次（需要实时更新，但是又不要触发太频繁）
+ * 应用：滚动事件，resize事件
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -13,8 +19,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="../vue/vue.js"></script>
+    <script src="./debounce.js"></script>
+    <script src="./throttle.js"></script>
+    <style>
+        .box{
+            color: aliceblue;
+            height: 300px;
+            text-align: center;
+            line-height: 300px;
+            background-color:rgb(20, 110, 213);
+            margin: 20px auto;
+        }
+    </style>
 </head>
 <body>
-    
+    <div class="demo01">
+        <div class="debounce">
+            <h2>防抖演示：</h2>
+            <input type="text" @input="myDebounce(2,100)" v-model="myInput"> 触发了:{{ count }} 次
+        </div>
+        <div class="throttle">
+            <h2>节流演示：</h2>
+            <div class="box">触发Rize值就变化：{{ boxNum }}</div>
+        </div>
+    </div>
 </body>
+<script>    
+    var fun
+    const vue = new Vue({
+        el:'.demo01',
+        data:{
+            myInput:'',
+            myDebounce:()=>{},
+            count: 0,
+            boxNum: 1,
+            myThrottle:()=>{}
+        },
+        methods: {
+            sendRequest(){
+                this.count++ 
+            },
+            reSize(){
+                this.boxNum = Math.floor(Math.random()*100)
+            }
+        },
+        created() {
+            this.myDebounce = debounce(this.sendRequest,100)
+        },
+        mounted() {
+            this.myThrottle = throttle(this.reSize,1000)
+            window.addEventListener('resize',this.myThrottle)
+        },
+    })
+
+</script>
 </html>
