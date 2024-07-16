@@ -84,3 +84,34 @@ function rapidSort(arr){
     testFn(rapidSort,testArr)
     console.timeEnd()
 })()
+
+
+// 查找算法
+// 1. 二分查找
+function binarySearch(arr, target) {
+    let left = 0;
+    let right = arr.length - 1;
+
+    while (left <= right) {
+        let mid = Math.floor((left + right) / 2);
+        if (arr[mid] === target) {
+            return mid;
+        } else if (arr[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+
+    return -1;
+}
+
+
+console.log(binarySearch([1,2,33,55,68,97,103], 103));
+
+
+
+
+
+
+// 螺旋矩阵
