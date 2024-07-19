@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box {
+            margin: 100px auto;
+        }
+
+        .big-circle {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background-color: #ccc;
+        }
+
+        .inner-circle {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: rgb(255, 255, 255);
+        }
+
+        .process {
+            position: absolute;
+            top: 50%;
+            right: 50%;
+            height: 75px;
+            transform: rotate(270deg);
+            transform-origin: top;
+        }
+
+        .process::after {
+            position: absolute;
+            content: "";
+            bottom: 0;
+            right: 50%;
+            transform: translate(50%, 100%);
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-color: #016236;
+            transition: all 0.5s;
+        }
+
+        .flex-box {
+            margin-top: 200px;
+            display: flex;
+            height: 300px;
+            background-color: #000;
+        }
+
+        .box1 {
+            flex-shrink: 0;
+            flex-grow: 0;
+            flex-basis: 300px;
+            background-color: rgb(255, 0, 149);
+        }
+
+        .box2 {
+            flex-basis: auto;
+            background-color: rgb(16, 229, 130);
+        }
+
+        .box3 {
+            position: sticky;
+            top: 0;
+            align-self: flex-start;
+            background-color: rgb(48, 57, 210);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="big-circle">
+            <div class="inner-circle">
+                <div class="process">
+                </div>
+            </div>
+        </div>
+    </div>
+    <input type="number" id="ipt">
+    <button id="add">add</button>
+    <div class="flex-box">
+        <div class="box1">23466666666666eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee6666</div>
+        <div class="box2">234</div>
+        <div class="box3">423</div>
+    </div>
+</body>
+<script>
+    var parent = document.querySelector('.inner-circle')
+    function createProcessItem() {
+        let item = document.createElement('div');
+        item.classList.add('process')
+        return item;
+    }
+
+
+    function addProcess(process, angle = 0) {
+        requestAnimationFrame(() => {
+            let item = createProcessItem()
+            item.style.transform = `rotate(${270 + angle}deg)`
+            parent.appendChild(item)
+            if (process <= angle) {
+                return
+            }
+            addProcess(process, angle + 1)
+
+        })
+    }
+    let btn = document.querySelector('#add')
+    let ipt = document.querySelector('#ipt')
+    var value = null
+    ipt.addEventListener('input', (e) => {
+        value = e.target.value
+    })
+    btn.addEventListener('click', () => {
+        if (value > 100) {
+            return alert('超出范围了')
+        }
+        let process = value * 3.6
+        addProcess(process)
+    })
+</script>
+
+</html>
