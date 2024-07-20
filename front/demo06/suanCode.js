@@ -160,16 +160,50 @@ function reverseList(node) {
     console.log(stack);
     return createLinkList(stack)
 }
-testLink(reverseList(node))
+// testLink(reverseList(node))
 
+
+// fix一下，之前写的存在问题
+// 使用递归的思想，递归的思想怎么来的：我的想法是如果可以"动态"的控制node[next][next][next]的层数
+// 那么我不就可以让node[next][next] = node[next],这样不就不会覆盖掉之前的节点了吗
+// 递归要搞清楚 自己返回的那个最小单元是为了什么：这里是为了返回给上一层一个已经改变好node[next]的node
 function reverseList_simple(node) {
-    let nowNode = new Node()
-    while (node.next) {
-        let nextNode = node
-        node.next = nowNode
-        nowNode = nextNode
-        node = node.next
+    if (node.next == null) {
+        stackArr.push(node)
+        return node
     }
+    let nextNode = reverseList_simple(node.next)
+    nextNode.next = node
     return node
 }
-testLink(reverseList_simple(node))
+let stackArr = []
+let copyNode = createLinkList([1, 2, 3, 4, 5])
+let lastNode = reverseList_simple(copyNode).next = new Node()
+testLink(stackArr[0])
+
+// 修正我之前的误区，私以为改变了obj.a会影响到temp，却忘记了赋值其实赋的是引用（内存地址）
+// 由于是地址不是数据，因此改变obj.a只是把obj.a的指针变了，并不会影响temp
+let obj = {
+    a: {
+        b: 1
+    }
+}
+let temp = obj.a
+obj.a = null
+console.log('ceshi:', temp);
+
+// 双指针法,搞明白之前的误区就好解决了
+function reverseNodeList(node) {
+    if (node == null || node.next == null) {
+        return node
+    }
+    let pre = null, cur = node
+    while (cur) {
+        let temp = cur.next
+        cur.next = pre
+        pre = cur
+        cur = temp
+    }
+    return pre
+}
+testLink(reverseNodeList(createLinkList([9, 8, 7, 6, 5, 4, 3, 2, 1])))
