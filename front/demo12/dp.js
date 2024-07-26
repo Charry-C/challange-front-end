@@ -58,30 +58,39 @@ console.log(uniquePaths(3, 7));
 
 // 不同路径II
 // 还是很简单，只需要当到达障碍物位置时，让“路径种数”变为0即可(加一个判断即可)
+// 这题ac不了的原因是因为初始化有问题，后续思考一下这种方法如何进行初始化
 var uniquePathsWithObstacles = function (obstacleGrid) {
     let m = obstacleGrid.length, n = obstacleGrid[0].length
+    if (obstacleGrid[m - 1][n - 1] == 1) return 0
     let dp = new Array(m).fill(0).map((row, index) => {
         let fillNum = 0
         if (m === index + 1) fillNum = 1
+        let mIndex = index
         return new Array(n).fill(fillNum).map((col, index) => {
             if (n === index + 1) col = 1
+            if (obstacleGrid[mIndex][index] === 1) col = -1
             return col
         })
     })
 
+    console.log(dp);
     let i = m - 1, j = n - 1
     for (let range = 0; range < dp.length - 1; range++) {
         while (j > 0) {
-            if (obstacleGrid[i - 1][j - 1] === 1 || obstacleGrid[i][j - 1] === 1 || obstacleGrid[i - 1][j] === 1) {
-                dp[i - i][j - 1] = 0
-            } else {
-                dp[i - 1][j - 1] = dp[i][j - 1] + dp[i - 1][j]
+            if (dp[i][j - 1] == -1) dp[i][j - 1] = 0
+            if (dp[i - 1][j] == -1) dp[i - 1][j] = 0
+            if (dp[i - 1][j - 1] == -1) {
+                dp[i - 1][j - 1] = 0
+                j--
+                continue
             }
+            dp[i - 1][j - 1] = dp[i][j - 1] + dp[i - 1][j]
             j--
+
         }
         i--
         j = n - 1
     }
     return dp[0][0]
 };
-console.log(uniquePathsWithObstacles([[0, 0, 0], [0, 1, 0], [0, 0, 0]]));
+console.log(uniquePathsWithObstacles([[0, 0], [1, 1], [0, 0]]));
