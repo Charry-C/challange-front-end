@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="box">
+
+    </div>
+</body>
+<script>
+    // 异步加载图片
+    function asyncGetImg(url) {
+        return new Promise((res, rej) => {
+            const img = new Image(300, 200)
+            // onload是图片内置的一个回调，可以自定义这个函数，当onload就会调用
+            img.onload = function () {
+                setTimeout(() => {
+                    res(img)
+                }, 3000)
+            }
+            img.onerror = function () {
+                rej(new Error('Could not load image at ' + url))
+                // 会在控制台输出
+            }
+            img.src = url
+        })
+    }
+    asyncGetImg('https://images.pexels.com/photos/12646557/pexels-photo-12646557.jpeg')
+        .then((imgElement) => {
+            document.querySelector('.box').appendChild(imgElement)
+        })
+
+
+    // 异步的XML请求
+    function asyncXMLRequest(url) {
+        return new Promise((res, rej) => {
+            const client = new XMLHttpRequest()
+            client.open('GET', url)
+            client.onreadystatechange = function () {
+                if (this.readyState !== 4) {
+                    return
+                }
+                if (this.status === 200) {
+                    resolve(this.response)
+                } else {
+                    rej(new Error(this.statusText))
+                }
+            }
+            client.responseType = 'json'
+            client.send() // send方法开启后就会执行 onreadystatechange的回调
+        })
+    }
+
+    asyncXMLRequest('https://www.baidu.com').then((json) => {
+        console.log(json);
+    }, (error) => {
+        console.log(error);
+    })
+
+
+
+    // 写一个能控制5秒内发送不成功就 警告的请求(race的应用)
+    const myRequest = Promise.race([
+        fetch('https://www.google.com'),
+        new Promise((res, rej) => {
+            setTimeout(() => {
+                rej()
+            }, 5000)
+        })
+    ])
+
+    myRequest.then((json) => {
+        console.log(json);
+    }).catch((error) => {
+        console.log('超时了');
+    })
+
+
+
+
+</script>
+
+</html>
