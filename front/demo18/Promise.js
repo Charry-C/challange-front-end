@@ -35,7 +35,7 @@ p2
 // 2. 实例的prototype的then方法
 // 接受参数：
 //   1. resolved状态的回调函数 onFulfilled
-// (若其不是函数，则会转换(x)=>x，将之前promise的值向前传递，相当于变成了一个函数未undefined的promise(fulfilled))
+// (若其不是函数，将之前promise的值向前传递，相当于变成了一个函数未undefined的promise(fulfilled))
 // (若是函数但不是promise，会将return的值作为下一个回调的val)
 //   2. rejected状态的回调函数 onRejected
 // 返回值：
@@ -87,7 +87,7 @@ p2
 // Promise.resolve()
 // 将现有对象转为Promise对象
 // 1. 参数 是Promise实例，原封不动返回
-// 2. 参数 不是对象，返回resovle(参数)
+// 2. 参数 不是对象，返回  已经resolved的promise,向前传递的值为 这个参数
 // 3. 不带参数，返回 一个promise对象
 
 
@@ -97,8 +97,5 @@ p2
 // 自己封装一个，当所有的都为fulfilled才会fulfilled
 // 参数：一个iterator
 
-
-// 2. Promise.map
-// 限制Promise并发数
 
 
