@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    function asyncRequest(method, url, params = null) {
+        const request = new XMLHttpRequest()
+        request.open(method, url)
+        return new Promise((res, rej) => {
+            XMLHttpRequest.onreadystatechange = function () {
+                if (request.readyState === 1) request.send(params)
+                if (request.readyState === 4) {
+                    if (request.status >= 200 && request.status < 300) {
+                        // 请求成功，返回响应
+                        resolve(request);
+                    } else {
+                        // 请求失败，返回错误信息
+                        reject(new Error(`HTTP Error: ${request.status}`));
+                    }
+                }
+            }
+            // 处理网络错误
+            request.onerror = function () {
+                reject(new Error('Network Error'));
+            };
+
+            // 处理请求进度（可选）
+            request.onprogress = function () {
+                if (request.readyState === 3) {
+                    console.log('Downloading...');
+                }
+            };
+
+            // 发送请求
+            request.send(params);
+        })
+    }
+
+    asyncRequest('GET', 'http://127.0.0.1:3001/cors').then((val) => {
+        console.log(val);
+    })
+</script>
+
+</html>
