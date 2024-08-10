@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../vue/vue.js"></script>
+    <style>
+        .box {
+            width: 300px;
+            height: 30px;
+            margin: 0px auto;
+            padding: 10px;
+            background-color: cadetblue;
+        }
+
+        .fake-sroller {
+            position: absolute;
+            width: 0.1px;
+            height: 10000px;
+        }
+
+        .list {
+            position: absolute;
+            width: 90%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="fake-sroller" ref="bar"></div>
+        <div class="list" ref="view">
+            <div class="box" v-for="box in showBox">{{ box }}</div>
+        </div>
+    </div>
+</body>
+<script>
+    // 今日就来试试最火的，一次性全给过了，不用总是看到再羡慕别人怎么会这些，都是基操好吧，有了思路随便写，简单的业务代码罢了
+    // 1. 虚拟列表
+    // 2. 大文件上传（分片 + 断点续传）
+    // 3. 图片懒加载
+    // 4. 利用并发控制 大文件上传
+
+    // document.querySelector('.btn').addEventListener('click', () => {
+    //     const ul = document.querySelector('.container')
+    //     let start = Date.now()
+    //     setTimeout(() => {
+    //         let end = Date.now()
+    //         document.querySelector('.time').innerText = end - start + 'ms'
+    //     })
+    //     for (let i = 0; i < 5; i++) {
+    //         const li = document.createElement('li')
+    //         li.innerText = i
+    //         ul.appendChild(li)
+    //     }
+    // })
+    // 首先要明白为什么要使用虚拟列表，因为一次性需要渲染的元素过多
+    // 且需求是不能分页显示，一次渲染过多就会造成页面的阻塞，直接无法交互
+    // 而且，对于用户来说，每次看到的数据仅有视口区域的，因此没必要一次就显示全部数据
+    // 每次仅加载目前需要的数据即可
+    // document.querySelector('.time').innerText = window.innerHeight
+    new Vue({
+        el: '.container',
+        data: {
+            total: 100000,
+            showBox: [],
+            winScrollY: 0,
+            startIndex: 0,
+            endIndex: 0,
+            ITEM_HEIGHT: 50, // 假设 ITEM_HEIGHT 是 30px
+            showBoxNum: 0  // 假设 showBoxNum 是 10
+        },
+        methods: {
+            createEle() {
+                this.showBox = this.getData();
+            },
+            getData() {
+                return new Array(this.showBoxNum).fill(0).map((item, index) => {
+                    return index + this.startIndex;
+                });
+            }
+        },
+        mounted() {
+            this.$refs.bar.style.height = this.total * this.ITEM_HEIGHT + 'px'
+            this.showBoxNum = Math.ceil(window.innerHeight / this.ITEM_HEIGHT)
+            window.addEventListener('scroll', () => {
+                this.winScrollY = window.scrollY;
+                this.$refs.view.style.top = this.winScrollY + 'px'
+                this.startIndex = Math.floor(this.winScrollY / this.ITEM_HEIGHT);
+                this.endIndex = this.startIndex + this.showBoxNum;
+                this.createEle();
+            });
+        },
+    });
+
+
+
+
+</script>
+
+</html>
