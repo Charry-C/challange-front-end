@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box::-webkit-scrollbar {
+            width: 5px;
+            height: 10px;
+        }
+
+        .box::-webkit-scrollbar-track {
+            background: #ffffff;
+            /* 滚动条背景 */
+        }
+
+        .box::-webkit-scrollbar-thumb {
+            background: rgb(0, 148, 71);
+            border-radius: 3px;
+            /* 滚动条滑块 */
+        }
+
+        div {
+            height: 200px;
+        }
+
+        .box {
+            height: 300px;
+            width: 400px;
+            background-color: black;
+            overflow: auto;
+        }
+
+        .a {
+            flex-basis: 100px;
+            background-color: red;
+        }
+
+        .b {
+            flex-basis: 100px;
+            background-color: yellow;
+        }
+
+        .c {
+            flex-basis: 201px;
+            background-color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="box">
+        <div class="a"></div>
+        <div class="b"></div>
+        <a class="c">(
+            <script>alert('XAA')</script>)
+        </a>
+    </div>
+</body>
+
+</html>
