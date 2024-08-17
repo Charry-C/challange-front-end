@@ -24,3 +24,5 @@ const currySum = curry(sum)
 console.log(currySum(1, 2)(3));
 console.log(currySum(1)(2)(3));
 console.log(currySum(1, 2, 3));
+
+// 
