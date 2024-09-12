@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./request.js"></script>
+</head>
+
+<body>
+    <div class="upload-box">
+        <input type="file" id="upload">
+        <button id="btn">上传</button>
+    </div>
+</body>
+<script>
+    const CHUNK = 1 * 1024 * 1024 * 3 // 10MB
+    async function cutFiletoChunk(file) {
+        // 先计算总切片数
+        let totalChunks = Math.ceil(file.size / CHUNK)
+        // 开始边切片边上传
+        for (let i = 0; i < totalChunks; i++) {
+            // 从第0片开始切，要防止切出边界
+            let fileChunk = file.slice(CHUNK * i, Math.min(CHUNK * (i + 1), file.size))
+            // 边切片边上传
+            let res = upload({ chunkIndex: i, totalChunks, fileChunk, filename: file.name })
+            console.log(res);
+        }
+        // 完成切片上传后，发送合并切片的请求
+        merge({ totalChunks, filename: file.name })
+    }
+    document.querySelector('#upload').addEventListener('change', (e) => {
+        cutFiletoChunk(e.target.files[0])
+    })
+</script>
+
+</html>
